@@ -29,8 +29,8 @@ cpu_benchmark(){
     CPU_SINGLE_TOTAL_TIME=$(echo "$CPU_SINGLE_RESULT" | grep 'total time:' | awk '{print $NF}')
     CPU_MULTI_TOTAL_TIME=$(echo "$CPU_MULTI_RESULT" | grep 'total time:' | awk '{print $NF}')
 
-    echo -e "单核耗时\t\t${CPU_SINGLE_TOTAL_TIME}"
-    echo -e "多核耗时\t\t${CPU_MULTI_TOTAL_TIME}"
+    echo -e "单核耗时\t\t\t\t\t\t\t${CPU_SINGLE_TOTAL_TIME}"
+    echo -e "多核耗时\t\t\t\t\t\t\t${CPU_MULTI_TOTAL_TIME}"
 
 }
 
@@ -44,14 +44,22 @@ memory_benckmark(){
     MEM_RND_WRITE_RESULT=$(sysbench --test=memory --num-threads=${THREAD_NUM} --memory-total-size=${MEMORY_TOTAL_SIZE} --max-time=${MAX_TIME} --memory-oper=write --memory-access-mode=rnd run)
 
     MEMORY_SEQ_READ_THROUGHPUT=$(echo "${MEM_SEQ_READ_RESULT}" | grep transferred | grep -oP '(?<=\().*(?=\s)' )
+    MEMORY_SEQ_READ_TIME=$(echo "${MEM_SEQ_READ_RESULT}" | grep 'total time:' | awk '{print $NF}') 
     MEMORY_SEQ_WRITE_THROUGHPUT=$(echo "${MEM_SEQ_WRITE_RESULT}" | grep transferred | grep -oP '(?<=\().*(?=\s)' )
+    MEMORY_SEQ_WRITE_TIME=$(echo "${MEM_SEQ_WRITE_RESULT}" | grep 'total time:' | awk '{print $NF}') 
     MEMORY_RND_READ_THROUGHPUT=$(echo "${MEM_RND_READ_RESULT}" | grep transferred | grep -oP '(?<=\().*(?=\s)' )
+    MEMORY_RND_READ_TIME=$(echo "${MEM_RND_READ_RESULT}" | grep 'total time:' | awk '{print $NF}') 
     MEMORY_RND_WRITE_THROUGHPUT=$(echo "${MEM_RND_WRITE_RESULT}" | grep transferred | grep -oP '(?<=\().*(?=\s)' )
+    MEMORY_RND_WRITE_TIME=$(echo "${MEM_RND_WRITE_RESULT}" | grep 'total time:' | awk '{print $NF}') 
 
-    echo -e "${THREAD_NUM}线程数内存顺序读吞吐量\t\t${MEMORY_SEQ_READ_THROUGHPUT} MiB/s" 
-    echo -e "${THREAD_NUM}线程数内存顺序写吞吐量\t\t${MEMORY_SEQ_WRITE_THROUGHPUT} MiB/s"
-    echo -e "${THREAD_NUM}线程数内存随机读吞吐量\t\t${MEMORY_RND_READ_THROUGHPUT} MiB/s"
-    echo -e "${THREAD_NUM}线程数内存随机写吞吐量\t\t${MEMORY_RND_WRITE_THROUGHPUT} MiB/s" 
+    echo -e "${THREAD_NUM}线程数内存顺序读耗时\t\t\t\t\t\t${MEMORY_SEQ_READ_TIME}" 
+    echo -e "${THREAD_NUM}线程数内存顺序读吞吐量\t\t\t\t\t${MEMORY_SEQ_READ_THROUGHPUT} MiB/s" 
+    echo -e "${THREAD_NUM}线程数内存顺序写耗时\t\t\t\t\t\t${MEMORY_SEQ_WRITE_TIME}" 
+    echo -e "${THREAD_NUM}线程数内存顺序写吞吐量\t\t\t\t\t${MEMORY_SEQ_WRITE_THROUGHPUT} MiB/s"
+    echo -e "${THREAD_NUM}线程数内存随机读耗时\t\t\t\t\t\t${MEMORY_RND_READ_TIME}" 
+    echo -e "${THREAD_NUM}线程数内存随机读吞吐量\t\t\t\t\t${MEMORY_RND_READ_THROUGHPUT} MiB/s"
+    echo -e "${THREAD_NUM}线程数内存随机写耗时\t\t\t\t\t\t${MEMORY_RND_WRITE_TIME}" 
+    echo -e "${THREAD_NUM}线程数内存随机写吞吐量\t\t\t\t\t${MEMORY_RND_WRITE_THROUGHPUT} MiB/s" 
 }
 
 # 磁盘性能测试，有单项最大测试时长限制，获取磁盘吞吐性能及IOPS
@@ -83,17 +91,17 @@ disk_benchmark(){
     DISK_RND_MIXED_READ_THROUGHPUT=$(echo "${DISK_RND_MIXED_RESULT}" | grep 'read, MiB/s:' | awk '{print $NF}') 
     DISK_RND_MIXED_WRITE_THROUGHPUT=$(echo "${DISK_RND_MIXED_RESULT}" | grep 'written, MiB/s:' | awk '{print $NF}') 
 
-    echo -e "${FILE_BLOCK_SIZE}磁盘顺序读吞吐量\t\t${DISK_SEQ_READ_THROUGHPUT} MiB/s" 
-    echo -e "${FILE_BLOCK_SIZE}磁盘顺序读IOPS\t\t${DISK_SEQ_READ_IOPS}/s" 
-    echo -e "${FILE_BLOCK_SIZE}磁盘顺序写吞吐量\t\t${DISK_SEQ_WRITE_THROUGHPUT}MiB/s" 
-    echo -e "${FILE_BLOCK_SIZE}磁盘顺序写IOPS\t\t${DISK_SEQ_WRITE_IOPS}/s" 
+    echo -e "${FILE_BLOCK_SIZE}磁盘顺序读吞吐量\t\t\t\t\t\t${DISK_SEQ_READ_THROUGHPUT} MiB/s" 
+    echo -e "${FILE_BLOCK_SIZE}磁盘顺序读IOPS\t\t\t\t\t\t${DISK_SEQ_READ_IOPS}/s" 
+    echo -e "${FILE_BLOCK_SIZE}磁盘顺序写吞吐量\t\t\t\t\t\t${DISK_SEQ_WRITE_THROUGHPUT}MiB/s" 
+    echo -e "${FILE_BLOCK_SIZE}磁盘顺序写IOPS\t\t\t\t\t\t${DISK_SEQ_WRITE_IOPS}/s" 
  
-    echo -e "${FILE_BLOCK_SIZE}磁盘随机读吞吐量\t\t${DISK_RND_READ_THROUGHPUT} MiB/s" 
-    echo -e "${FILE_BLOCK_SIZE}磁盘随机读IOPS\t\t${DISK_RND_READ_IOPS}/s" 
-    echo -e "${FILE_BLOCK_SIZE}磁盘随机写吞吐量\t\t${DISK_RND_WRITE_THROUGHPUT} MiB/s" 
-    echo -e "${FILE_BLOCK_SIZE}磁盘随机写IOPS\t\t${DISK_RND_WRITE_IOPS}/s" 
-    echo -e "${FILE_BLOCK_SIZE}磁盘混合读写吞吐量\t\t${DISK_RND_MIXED_READ_THROUGHPUT}/${DISK_RND_MIXED_WRITE_THROUGHPUT}" 
-    echo -e "${FILE_BLOCK_SIZE}磁盘混合读写IOPS\t\t${DISK_RND_MIXED_READ_IOPS}/${DISK_RND_MIXED_WRITE_IOPS}" 
+    echo -e "${FILE_BLOCK_SIZE}磁盘随机读吞吐量\t\t\t\t\t\t${DISK_RND_READ_THROUGHPUT} MiB/s" 
+    echo -e "${FILE_BLOCK_SIZE}磁盘随机读IOPS\t\t\t\t\t\t${DISK_RND_READ_IOPS}/s" 
+    echo -e "${FILE_BLOCK_SIZE}磁盘随机写吞吐量\t\t\t\t\t\t${DISK_RND_WRITE_THROUGHPUT} MiB/s" 
+    echo -e "${FILE_BLOCK_SIZE}磁盘随机写IOPS\t\t\t\t\t\t${DISK_RND_WRITE_IOPS}/s" 
+    echo -e "${FILE_BLOCK_SIZE}磁盘混合读写吞吐量\t\t\t\t\t\t${DISK_RND_MIXED_READ_THROUGHPUT}/${DISK_RND_MIXED_WRITE_THROUGHPUT}" 
+    echo -e "${FILE_BLOCK_SIZE}磁盘混合读写IOPS\t\t\t\t\t\t${DISK_RND_MIXED_READ_IOPS}/${DISK_RND_MIXED_WRITE_IOPS}" 
 }
 
 
@@ -115,9 +123,13 @@ debug_log(){
 
 {
     cpu_benchmark
+    echo
     memory_benckmark
+    echo
     memory_benckmark 16
+    echo
     disk_benchmark 16k  
+    echo
     disk_benchmark 64k
     debug_log
 } | tee ${WORK_DIR}/logs/benchmark_$(date +%s).log
